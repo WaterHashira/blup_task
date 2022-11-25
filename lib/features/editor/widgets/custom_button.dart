@@ -12,11 +12,17 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: onTap,
-      child: ListTile(
-        title: Text(buttonText),
-        trailing: Icon(buttonIcon),
+    return InkWell(
+      child: Center(
+        child: TextButton(
+          onPressed: onTap,
+          child: Center(
+            child: Text(
+              buttonText,
+              style: const TextStyle(color: Colors.black),
+            ),
+          ),
+        ),
       ),
     );
   }

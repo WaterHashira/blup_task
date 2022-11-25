@@ -1,16 +1,71 @@
+import 'package:blup_task/features/editor/box_layout_delegate.dart';
 import 'package:blup_task/features/editor/editor_screen.dart';
+import 'package:blup_task/features/editor/widgets/custom_text_field.dart';
+import 'package:blup_task/utils/constants.dart';
+import 'package:blup_task/utils/value_notifier.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+//TODO: make it stateful
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Map<int, Offset> originalMap = {};
+
+    //for adding textfield box adding functionality on button tap
+    void _addTextButtonOnTap() {
+      int len = originalMap.length;
+      print(len);
+      //EditorScreen().currBoxId = len;
+      //EditorScreen().currBoxOffset = initialBoxPosition;
+      setState(() {
+        originalMap[len] = initialBoxPosition;
+        print(originalMap.toString());
+        //tempMap = originalMap;
+      });
+    }
+
+    //for building the boxes contained in the originalMap over the editor's screen
+    List<Widget> boxesBuilder() {
+      List<Widget> boxes = [];
+      List<int> boxIdList = originalMap.keys.toList();
+      for (int i = 0; i < boxIdList.length; i++) {
+        boxes.add(LayoutId(
+            id: boxIdList[i],
+            child: Stack(
+              children: [
+                CustomTextField(
+                  id: boxIdList[i],
+                ),
+              ],
+            )));
+      }
+      return boxes;
+    }
+
+    //method for handling the onDragStart and onDragEnd logic for any box over the editor screen
+    void dragLogicHandler(bool dragged) {
+      if (dragged) {
+        /*if (tempMap.containsKey(widget.currBoxId)) {
+        tempMap.remove(widget.currBoxId);
+        //run fn. with logic for guide lines*/
+      } else {
+        //originalMap[EditorScreen().currBoxId] = EditorScreen().currBoxOffset;
+        //tempMap = originalMap;
+      }
+    }
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -26,6 +81,31 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: EditorScreen(),
+      /*Scaffold(
+        floatingActionButton:
+            FloatingActionButton(onPressed: _addTextButtonOnTap),
+        body: Container(
+            child: ValueListenableBuilder(
+          valueListenable: EditorValueNotifier().isBoxBeingDragged,
+          builder: (context, value, _) {
+            print(
+                'called again ----------------------> val -------> ${EditorValueNotifier().isBoxBeingDragged.value}');
+            dragLogicHandler(value);
+            return Stack(
+              children: [
+                Container(),
+                CustomMultiChildLayout(
+                  delegate: BoxLayoutDelegate(
+                      maxHeight: 200,
+                      maxWidth: 200,
+                      originalBoxMap: originalMap),
+                  children: boxesBuilder(),
+                ),
+              ],
+            );
+          },
+        )),
+      ),*/
     );
   }
 }
